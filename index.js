@@ -60,7 +60,7 @@ module.exports = function(fileName, opts) {
     function endStream(){
         if (!firstFile) return this.emit('end');
 
-        var contentPath = path.join(firstFile.base, fileName),
+        var contentPath = path.join(process.cwd(), fileName),
             mapPath = contentPath + '.map';
         
         if(!firstFile.sourceMap) {
@@ -81,8 +81,6 @@ module.exports = function(fileName, opts) {
         sourceMap.file = path.basename(sourceMap.file);
 
         var contentFile = new File({
-            cwd: firstFile.cwd,
-            base: firstFile.base,
             path: contentPath,
             contents: new Buffer(codeMap.code)
         });
@@ -91,8 +89,6 @@ module.exports = function(fileName, opts) {
             contentFile.sourceMap = sourceMap;
         } else {
             var mapFile = new File({
-                cwd: firstFile.cwd,
-                base: firstFile.base,
                 path: mapPath,
                 contents: new Buffer(JSON.stringify(sourceMap, null, '  '))
             });
